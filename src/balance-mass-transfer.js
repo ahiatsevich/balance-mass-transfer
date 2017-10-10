@@ -1,16 +1,18 @@
 const fs = require("fs");
 const CSVParser = require("csv-parse/lib/sync");
 const GetCSVWriter = require('csv-writer').createObjectCsvWriter;
+const optimist = require('optimist');
 
 const ENCODING = 'utf-8';
 
 module.exports = function () {
     const logs = [];
 
-    const csvFilePath = process.argv[7];
-    const txBatchSize = process.argv[9];
-    const gasPrice = web3.toWei(process.argv[11], 'gwei');
-    const target = process.argv[13];
+    var argv = optimist.argv;
+    const csvFilePath = argv.data;
+    const txBatchSize = argv.batch_size;
+    const gasPrice = web3.toWei(argv.gas_price, 'gwei');
+    const target = "0x" + argv.target;
 
     const rawData = fs.readFileSync(csvFilePath).toString(ENCODING);
     const data = CSVParser(rawData, {columns: true});
