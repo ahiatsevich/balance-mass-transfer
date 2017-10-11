@@ -2,6 +2,7 @@ const fs = require("fs");
 const CSVParser = require("csv-parse/lib/sync");
 const GetCSVWriter = require('csv-writer').createObjectCsvWriter;
 const optimist = require('optimist');
+var BigNumber = require('bignumber.js');
 
 const ENCODING = 'utf-8';
 
@@ -80,7 +81,7 @@ module.exports = function () {
 
         Promise
         .all(batch)
-        .then(result => {
+        .then(() => {
             console.log("Transfered. From idx", fromIdx, "to", to - 1);
             logWriter.writeRecords(logs);
 
@@ -122,7 +123,7 @@ module.exports = function () {
                     gas: 21000
                 };
 
-                const transferAmount = logObject.balance - estimateCost;
+                const transferAmount = new BigNumber(logObject.balance).minus(estimateCost);
                 logObject.balance = transferAmount;
                 txData.value = transferAmount;
 
